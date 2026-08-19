@@ -19,6 +19,7 @@ subtest "clean", {
     "{PKG-ROOT}/npm/lefthook-darwin-arm64/README.md",
     "{PKG-ROOT}/npm/lefthook-darwin-x64/README.md",
     "{PKG-ROOT}/npm/lefthook-linux-arm64/README.md",
+    "{PKG-ROOT}/npm/lefthook-linux-loong64/README.md",
     "{PKG-ROOT}/npm/lefthook-linux-x64/README.md",
     "{PKG-ROOT}/npm/lefthook-windows-arm64/README.md",
     "{PKG-ROOT}/npm/lefthook-windows-x64/README.md",
@@ -38,6 +39,7 @@ subtest "clean", {
     "{PKG-ROOT}/npm/lefthook-darwin-arm64/bin/lefthook",
     "{PKG-ROOT}/npm/lefthook-freebsd-arm64/bin/lefthook",
     "{PKG-ROOT}/npm/lefthook-openbsd-arm64/bin/lefthook",
+    "{PKG-ROOT}/npm/lefthook-linux-loong64/README.md",
     "{PKG-ROOT}/npm-bundled/bin/lefthook-linux-x64/lefthook",
     "{PKG-ROOT}/npm-bundled/bin/lefthook-windows-x64/lefthook.exe",
     "{PKG-ROOT}/npm-bundled/bin/lefthook-darwin-x64/lefthook",
@@ -48,6 +50,7 @@ subtest "clean", {
     "{PKG-ROOT}/npm-bundled/bin/lefthook-darwin-arm64/lefthook",
     "{PKG-ROOT}/npm-bundled/bin/lefthook-freebsd-arm64/lefthook",
     "{PKG-ROOT}/npm-bundled/bin/lefthook-openbsd-arm64/lefthook",
+    "{PKG-ROOT}/npm-bundled/bin/lefthook-linux-loong64/lefthook",
   ).Set;
 }
 
@@ -62,6 +65,7 @@ subtest "prepare", {
       "{PKG-ROOT}/npm/lefthook-darwin-arm64/README.md",
       "{PKG-ROOT}/npm/lefthook-darwin-x64/README.md",
       "{PKG-ROOT}/npm/lefthook-linux-arm64/README.md",
+      "{PKG-ROOT}/npm/lefthook-linux-loong64/README.md",
       "{PKG-ROOT}/npm/lefthook-linux-x64/README.md",
       "{PKG-ROOT}/npm/lefthook-windows-arm64/README.md",
       "{PKG-ROOT}/npm/lefthook-windows-x64/README.md",
@@ -117,6 +121,10 @@ subtest "prepare", {
       "{PKG-ROOT}/npm/lefthook-openbsd-arm64/bin/lefthook",
       "{PKG-ROOT}/npm-bundled/bin/lefthook-openbsd-arm64/lefthook",
     ).SetHash,
+    "{REPO-ROOT}/dist/no_self_update_linux_loong64/lefthook" => (
+      "{PKG-ROOT}/npm/lefthook-linux-loong64/bin/lefthook",
+      "{PKG-ROOT}/npm-bundled/bin/lefthook-linux-loong64/lefthook",
+    ).SetHash,
   };
 }
 
@@ -126,19 +134,20 @@ subtest "publish", {
   $npm.publish;
 
   is-deeply $sys.run-calls, [
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-darwin-arm64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-darwin-x64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-linux-arm64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-linux-x64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-windows-arm64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-windows-x64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-freebsd-arm64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-freebsd-x64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-openbsd-arm64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook-openbsd-x64/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm/lefthook/".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm-bundled".IO),
-    ("npm publish --access public", "{PKG-ROOT}/npm-installer".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-darwin-arm64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-darwin-x64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-linux-arm64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-linux-loong64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-linux-x64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-windows-arm64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-windows-x64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-freebsd-arm64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-freebsd-x64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-openbsd-arm64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook-openbsd-x64/".IO),
+    ("npm pack", "{PKG-ROOT}/npm/lefthook/".IO),
+    ("npm pack", "{PKG-ROOT}/npm-bundled".IO),
+    ("npm pack", "{PKG-ROOT}/npm-installer".IO),
   ], "calls publishing in the right order";
 }
 
