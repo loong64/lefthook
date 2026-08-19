@@ -1,0 +1,25 @@
+---
+type: concept
+title: Alpine
+source: "https://lefthook.dev/installation/alpine/"
+path: /installation/alpine/
+updated: 2026-08-19
+okf:
+  generated_by: "@docmd/plugin-okf"
+  generated_at: "2026-08-19T17:12:26.244Z"
+---
+---
+title: "Alpine"
+---
+
+# APK packages for Alpine
+
+```sh
+sudo apk add --no-cache bash curl
+curl -1sLf 'https://dl.cloudsmith.io/public/evilmartians/lefthook/setup.alpine.sh' | sudo -E bash
+sudo apk add lefthook
+```
+
+See all instructions: https://cloudsmith.io/~evilmartians/repos/lefthook/setup/#formats-alpine
+
+[![Hosted By: Cloudsmith](https://img.shields.io/badge/OSS%20hosting%20by-cloudsmith-blue?logo=cloudsmith&style=flat-square)](https://cloudsmith.com "RPM package repository hosting is graciously provided by Cloudsmith")
