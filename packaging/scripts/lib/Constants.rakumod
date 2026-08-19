@@ -22,4 +22,6 @@ constant %DISTS = (
   arm64-darwin  => "{DIST-ROOT}/no_self_update_darwin_arm64_v8.0/lefthook",
   arm64-freebsd => "{DIST-ROOT}/no_self_update_freebsd_arm64_v8.0/lefthook",
   arm64-openbsd => "{DIST-ROOT}/no_self_update_openbsd_arm64_v8.0/lefthook",
+
+  loong64-linux   => "{DIST-ROOT}/no_self_update_linux_loong64/lefthook",
 );
