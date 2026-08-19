@@ -51,7 +51,7 @@ function getDownloadURL() {
   }
   const version = require("./package.json").version
 
-  return `https://github.com/evilmartians/lefthook/releases/download/v${version}/lefthook_${version}_${downloadOS}_${arch}${extension}`
+  return `https://github.com/loong64/lefthook/releases/download/v${version}/lefthook_${version}_${downloadOS}_${arch}${extension}`
 }
 
 async function downloadBinary(url, dest) {
