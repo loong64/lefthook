@@ -31,6 +31,7 @@
     "lefthook-darwin-arm64": "2.1.11",
     "lefthook-darwin-x64": "2.1.11",
     "lefthook-linux-arm64": "2.1.11",
+    "lefthook-linux-loong64": "2.1.11",
     "lefthook-linux-x64": "2.1.11",
     "lefthook-freebsd-arm64": "2.1.11",
     "lefthook-freebsd-x64": "2.1.11",
