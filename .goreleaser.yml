@@ -19,6 +19,7 @@ builds:
     goarch:
       - amd64
       - arm64
+      - loong64
       - 386
     ignore:
       - goos: darwin
@@ -47,6 +48,7 @@ builds:
     goarch:
       - amd64
       - arm64
+      - loong64
       - 386
     ignore:
       - goos: darwin
@@ -69,6 +71,18 @@ builds:
       - linux
     goarch:
       - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X github.com/evilmartians/lefthook/internal/version.commit={{.Commit}}
+
+  - id: lefthook-linux-loongarch64
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - loong64
     flags:
       - -trimpath
     ldflags:
@@ -137,6 +151,38 @@ archives:
       {{- else if eq .Arch "arm64" }}aarch64
       {{- else }}{{ .Arch }}{{ end }}
 
+  - id: lefthook-linux-loongarch64
+    formats: [binary]
+    ids:
+      - lefthook-linux-loongarch64
+    files:
+      - none*
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- if eq .Os "darwin" }}MacOS
+      {{- else }}{{ title .Os }}{{ end }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else if eq .Arch "loong64" }}loongarch64
+      {{- else }}{{ .Arch }}{{ end }}
+
+  - id: lefthook-linux-loongarch64-gz
+    formats: [gz]
+    ids:
+      - lefthook-linux-loongarch64
+    files:
+      - none*
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- if eq .Os "darwin" }}MacOS
+      {{- else }}{{ title .Os }}{{ end }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else if eq .Arch "loong64" }}loongarch64
+      {{- else }}{{ .Arch }}{{ end }}
+
 checksum:
   name_template: "{{ .ProjectName }}_checksums.txt"
   algorithm: sha256
@@ -154,30 +200,3 @@ changelog:
     - '^tmp:'
     - '^context:'
     - '^\d+\.\d+\.\d+:'
-
-snapcrafts:
-  - summary: Fast and powerful Git hooks manager for any type of projects.
-    description: |
-      Lefthook is a single dependency-free binary to manage all your git hooks. It works with any language in any environment, and in all common team workflows.
-    grade: stable
-    confinement: classic
-    publish: true
-    license: MIT
-    ids:
-      - no_self_update
-
-nfpms:
-  - file_name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-    homepage:  https://github.com/evilmartians/lefthook
-    description: Lefthook a single dependency-free binary to manage all your git hooks that works with any language in any environment, and in all common team workflows
-    maintainer: Evil Martians <lefthook@evilmartians.com>
-    license: MIT
-    vendor: Evil Martians
-    ids:
-      - no_self_update
-    formats:
-      - apk
-      - deb
-      - rpm
-    dependencies:
-      - git
