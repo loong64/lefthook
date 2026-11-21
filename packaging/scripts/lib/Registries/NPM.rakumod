@@ -14,6 +14,7 @@ my constant @READMES = qq:to/END/.lines.map(*.trim);
   {NPM}/lefthook-darwin-arm64/README.md
   {NPM}/lefthook-darwin-x64/README.md
   {NPM}/lefthook-linux-arm64/README.md
+  {NPM}/lefthook-linux-loong64/README.md
   {NPM}/lefthook-linux-x64/README.md
   {NPM}/lefthook-windows-arm64/README.md
   {NPM}/lefthook-windows-x64/README.md
@@ -28,6 +29,7 @@ my constant @PACKAGES = qq:to/END/.lines.map(*.trim);
   {NPM}/lefthook-darwin-arm64/
   {NPM}/lefthook-darwin-x64/
   {NPM}/lefthook-linux-arm64/
+  {NPM}/lefthook-linux-loong64/
   {NPM}/lefthook-linux-x64/
   {NPM}/lefthook-windows-arm64/
   {NPM}/lefthook-windows-x64/
@@ -60,6 +62,8 @@ my constant %NPM-DISTS = (
   arm64-darwin  => "{NPM}/lefthook-darwin-arm64/bin/lefthook",
   arm64-freebsd => "{NPM}/lefthook-freebsd-arm64/bin/lefthook",
   arm64-openbsd => "{NPM}/lefthook-openbsd-arm64/bin/lefthook",
+
+  loong64-linux   => "{NPM}/lefthook-linux-loong64/bin/lefthook",
 );
 my constant %NPM-BUNDLED-DISTS = (
   amd64-linux   => "{NPM-BUNDLED}/bin/lefthook-linux-x64/lefthook",
@@ -73,6 +77,8 @@ my constant %NPM-BUNDLED-DISTS = (
   arm64-darwin  => "{NPM-BUNDLED}/bin/lefthook-darwin-arm64/lefthook",
   arm64-freebsd => "{NPM-BUNDLED}/bin/lefthook-freebsd-arm64/lefthook",
   arm64-openbsd => "{NPM-BUNDLED}/bin/lefthook-openbsd-arm64/lefthook",
+
+  loong64-linux   => "{NPM-BUNDLED}/bin/lefthook-linux-loong64/lefthook",
 );
 
 method target(--> Registry::Target:D) { Registry::Target::npm }
