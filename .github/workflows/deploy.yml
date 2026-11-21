@@ -54,7 +54,7 @@ jobs:
         run: |
           git fetch upstream --prune --force
           git checkout ${version} -b loong64-${version}
-          wget -qO - https://github.com/${{ github.repository }}/raw/refs/heads/main/patch_loong64.patch | patch -p1
+          wget -qO - https://github.com/${{ github.repository }}/raw/refs/heads/master/patch_loong64.patch | patch -p1
           cp -pR packaging/registries/npm/lefthook-linux-arm64 packaging/registries/npm/lefthook-linux-loong64
           sed -i 's/arm64/loong64/g' packaging/registries/npm/lefthook-linux-loong64/package.json
           sed -i 's/ARM/LoongArch/g' packaging/registries/npm/lefthook-linux-loong64/package.json
