@@ -40,7 +40,7 @@ call_lefthook()
   else
     dir="$(git rev-parse --show-toplevel)"
     osArch=$(uname | tr '[:upper:]' '[:lower:]')
-    cpuArch=$(uname -m | sed 's/aarch64/arm64/;s/x86_64/x64/')
+    cpuArch=$(uname -m | sed 's/aarch64/arm64/;s/x86_64/x64/;s/loongarch64/loong64/')
     if test -f "$dir/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook{{.Extension}}"
     then
       "$dir/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook{{.Extension}}" "$@"
