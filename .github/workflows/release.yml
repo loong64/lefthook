@@ -5,14 +5,13 @@ on:
     tags:
       - "*"
 
-permissions:
-  attestations: write
-  contents: write
-  id-token: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -60,6 +59,8 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      NPM_CONFIG_REGISTRY: https://${{ vars.LOONGDOTJS_NPM_REGISTRY }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -70,209 +71,19 @@ jobs:
         with:
           name: dist
       - run: tar -xvf dist.tar
+
+      - name: Prepare publish
+        env:
+          NPM_REGISTRY: ${{ vars.LOONGDOTJS_NPM_REGISTRY }}
+          NPM_TOKEN: ${{ secrets.LOONGDOTJS_NPM_TOKEN }}
+        run: |
+          echo "//${NPM_REGISTRY}/:_authToken=${NPM_TOKEN}" > ~/.npmrc
 
       - uses: actions/setup-node@v6
         with:
-          node-version: '24'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Update npm
-        run: npm install -g npm@12
+          node-version: 'latest'
 
       - name: Publish to NPM
-        env:
-          NPM_API_KEY: ${{ secrets.NPM_API_KEY }}
         run: |
           bash packaging/scripts/prepare npm
           bash packaging/scripts/publish npm
-
-  publish-gem:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - run: git fetch --force --tags
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
-      - run: tar -xvf dist.tar
-
-      - name: Publish to Rubygems
-        env:
-          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
-        run: |
-          mkdir -p ~/.gem/
-          cat << EOF > ~/.gem/credentials
-          ---
-          :rubygems_api_key: ${RUBYGEMS_API_KEY}
-          EOF
-          chmod 0600 ~/.gem/credentials
-          bash packaging/scripts/prepare rubygem
-          bash packaging/scripts/publish rubygem
-
-  publish-pypi:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - run: git fetch --force --tags
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
-      - run: tar -xvf dist.tar
-
-      - name: Setup uv with python
-        uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: false
-          python-version: "3.12"
-          version: "latest"
-
-      - name: Publish to PyPI
-        env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_KEY }}
-        run: |
-          bash packaging/scripts/prepare pypi
-          bash packaging/scripts/publish pypi
-
-  publish-homebrew:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Update Homebrew formula
-        uses: dawidd6/action-homebrew-bump-formula@v10
-        with:
-          formula: lefthook
-          token: ${{ secrets.HOMEBREW_TOKEN }}
-
-  publish-winget:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Publish to Winget
-        uses: vedantmgoyal2009/winget-releaser@v2
-        with:
-          identifier: evilmartians.lefthook
-          fork-user: mrexox
-          token: ${{ secrets.WINGET_TOKEN }}
-
-  publish-distro-packages:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: dist
-      - run: tar -xvf dist.tar
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python -m pip install --upgrade cloudsmith-cli
-
-      - name: Push packages to Cloudsmith
-        env:
-          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
-        run: |
-          cloudsmith push deb evilmartians/lefthook/any-distro/any-version dist/lefthook_*_amd64.deb
-          cloudsmith push deb evilmartians/lefthook/any-distro/any-version dist/lefthook_*_arm64.deb
-          cloudsmith push rpm evilmartians/lefthook/any-distro/any-version dist/lefthook_*_amd64.rpm
-          cloudsmith push rpm evilmartians/lefthook/any-distro/any-version dist/lefthook_*_arm64.rpm
-          cloudsmith push alpine evilmartians/lefthook/alpine/any-version dist/lefthook_*_amd64.apk
-          cloudsmith push alpine evilmartians/lefthook/alpine/any-version dist/lefthook_*_arm64.apk
-
-  publish-aur_lefthook:
-    needs: build
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux:latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Update AUR package
-        run: |
-          pacman -Syu --noconfirm
-          pacman -S --noconfirm openssh git go base-devel curl
-
-          useradd -m -G wheel runner
-          echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-          chown -R runner:runner .
-
-          su runner -c '
-            mkdir -p ~/.ssh
-            echo "${{ secrets.AUR_SSH_KEY }}" > ~/.ssh/aur
-            chmod 600 ~/.ssh/aur
-            echo "Host aur.archlinux.org" >> ~/.ssh/config
-            echo "  IdentityFile ~/.ssh/aur" >> ~/.ssh/config
-            echo "  User aur" >> ~/.ssh/config
-            ssh-keyscan -H aur.archlinux.org >> ~/.ssh/known_hosts
-
-            bash packaging/scripts/publish aur
-          '
-
-  publish-aur_lefthook-bin:
-    needs: build
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux:latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Update AUR package
-        run: |
-          pacman -Syu --noconfirm
-          pacman -S --noconfirm openssh git base-devel curl
-
-          useradd -m -G wheel runner
-          echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-          chown -R runner:runner .
-
-          su runner -c '
-            mkdir -p ~/.ssh
-            echo "${{ secrets.AUR_SSH_KEY }}" > ~/.ssh/aur
-            chmod 600 ~/.ssh/aur
-            echo "Host aur.archlinux.org" >> ~/.ssh/config
-            echo "  IdentityFile ~/.ssh/aur" >> ~/.ssh/config
-            echo "  User aur" >> ~/.ssh/config
-            ssh-keyscan -H aur.archlinux.org >> ~/.ssh/known_hosts
-
-            bash packaging/scripts/publish aur-bin
-          '
-
-  publish-php:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Update PHP package
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.LEFTHOOK_PHP_SSH_KEY }}" > ~/.ssh/lefthook_php
-          chmod 600 ~/.ssh/lefthook_php
-          echo "Host github.com" >> ~/.ssh/config
-          echo "  IdentityFile ~/.ssh/lefthook_php" >> ~/.ssh/config
-          echo "  IdentitiesOnly yes" >> ~/.ssh/config
-          echo "  User git" >> ~/.ssh/config
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-          bash packaging/scripts/publish php
