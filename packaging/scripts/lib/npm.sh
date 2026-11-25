@@ -16,6 +16,7 @@ declare -ra PACKAGES=(
   "${NPM}/lefthook-darwin-arm64"
   "${NPM}/lefthook-darwin-x64"
   "${NPM}/lefthook-linux-arm64"
+  "${NPM}/lefthook-linux-loong64"
   "${NPM}/lefthook-linux-x64"
   "${NPM}/lefthook-windows-arm64"
   "${NPM}/lefthook-windows-x64"
@@ -44,6 +45,7 @@ declare -rA NPM_BINARIES=(
   [arm64-freebsd]="${NPM}/lefthook-freebsd-arm64/bin/lefthook"
   [arm64-openbsd]="${NPM}/lefthook-openbsd-arm64/bin/lefthook"
   [arm64-android]="${NPM}/lefthook-android-arm64/bin/lefthook"
+  [loong64-linux]="${NPM}/lefthook-linux-loong64/bin/lefthook"
 )
 
 declare -rA NPM_BUNDLED_BINARIES=(
@@ -58,6 +60,7 @@ declare -rA NPM_BUNDLED_BINARIES=(
   [arm64-freebsd]="${NPM_BUNDLED}/bin/lefthook-freebsd-arm64/lefthook"
   [arm64-openbsd]="${NPM_BUNDLED}/bin/lefthook-openbsd-arm64/lefthook"
   [arm64-android]="${NPM_BUNDLED}/bin/lefthook-android-arm64/lefthook"
+  [loong64-linux]="${NPM_BUNDLED}/bin/lefthook-linux-loong64/lefthook"
 )
 
 set_version_npm() {

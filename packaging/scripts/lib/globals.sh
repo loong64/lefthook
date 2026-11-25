@@ -23,4 +23,5 @@ declare -rA BINARIES=(
   [arm64-freebsd]="${BINS_ROOT}/no_self_update_freebsd_arm64_v8.0/lefthook"
   [arm64-openbsd]="${BINS_ROOT}/no_self_update_openbsd_arm64_v8.0/lefthook"
   [arm64-android]="${BINS_ROOT}/no_self_update_android_arm64_v8.0/lefthook"
+  [loong64-linux]="${BINS_ROOT}/no_self_update_linux_loong64/lefthook"
 )
