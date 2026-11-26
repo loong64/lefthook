@@ -1,5 +1,5 @@
 diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
-index 2de2f662f..803aeb075 100644
+index e8171dccd..803aeb075 100644
 --- a/.github/workflows/release.yml
 +++ b/.github/workflows/release.yml
 @@ -5,14 +5,13 @@ on:
@@ -178,7 +178,7 @@ index 2de2f662f..803aeb075 100644
 -    runs-on: ubuntu-latest
 -    steps:
 -      - name: Update Homebrew formula
--        uses: dawidd6/action-homebrew-bump-formula@v10
+-        uses: dawidd6/action-homebrew-bump-formula@346ef10bbd55df1c9c70fbaa6b016d26876eefb1 # v11
 -        with:
 -          formula: lefthook
 -          token: ${{ secrets.HOMEBREW_TOKEN }}
@@ -442,7 +442,7 @@ index f58d3610d..6e9b97e0c 100644
      then
        "$dir/node_modules/lefthook-${osArch}-${cpuArch}/bin/lefthook{{.Extension}}" "$@"
 diff --git a/packaging/registries/npm-bundled/package.json b/packaging/registries/npm-bundled/package.json
-index fe1ceb950..2c87887dd 100644
+index 17b512087..2add64c97 100644
 --- a/packaging/registries/npm-bundled/package.json
 +++ b/packaging/registries/npm-bundled/package.json
 @@ -37,6 +37,7 @@
@@ -467,7 +467,7 @@ index b32ad0d13..deac92ae1 100755
  
  async function downloadBinary(url, dest) {
 diff --git a/packaging/registries/npm-installer/package.json b/packaging/registries/npm-installer/package.json
-index b1a4bfb6a..73e52aa92 100644
+index 565cb947f..8518cf716 100644
 --- a/packaging/registries/npm-installer/package.json
 +++ b/packaging/registries/npm-installer/package.json
 @@ -33,7 +33,8 @@
@@ -481,7 +481,7 @@ index b1a4bfb6a..73e52aa92 100644
    "scripts": {
      "install": "node install.js"
 diff --git a/packaging/scripts/lib/globals.sh b/packaging/scripts/lib/globals.sh
-index d1899d5d3..89619309a 100644
+index edb9c41f3..9492e6bc3 100644
 --- a/packaging/scripts/lib/globals.sh
 +++ b/packaging/scripts/lib/globals.sh
 @@ -23,4 +23,5 @@ declare -rA BINARIES=(
